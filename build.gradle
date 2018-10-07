@@ -13,7 +13,7 @@ buildscript {
     repositories {
         mavenLocal()
         maven {
-            url 'http://maven.oschina.net/content/groups/public/'
+            url 'http://maven.aliyun.com/nexus/content/groups/public/'
         }
         mavenCentral()
     }
@@ -22,13 +22,14 @@ buildscript {
 repositories {
     mavenLocal()
     maven {
-        url 'http://maven.oschina.net/content/groups/public/'
+        url 'http://maven.aliyun.com/nexus/content/groups/public/'
     }
     mavenCentral()
 }
 
 dependencies {
-    compile 'mysql:mysql-connector-java:5.1.37'
+    compile 'mysql:mysql-connector-java:8.0.11'
+//    compile 'mysql:mysql-connector-java:5.1.37'
     compile 'com.dangdang:sharding-jdbc-core:1.1.0'
     compile 'com.alibaba:druid:1.0.12'
     compile 'commons-dbcp:commons-dbcp:1.4'

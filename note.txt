@@ -1,0 +1,9 @@
+路由业务类.方法  com.dangdang.ddframe.rdb.sharding.router.single.SingleTableRouter.route()
+分片规则：com.dangdang.ddframe.rdb.sharding.api.rule.ShardingRule
+根据user_id分库，根据order_id分表
+分库时，删除语句的路由策略:
+com.dangdang.ddframe.rdb.sharding.api.strategy.common.ShardingStrategy.doSharding(final SQLStatementType sqlStatementType, final Collection<String> availableTargetNames,
+                                         final Collection<ShardingValue<? extends Comparable<?>>> shardingValues)
+  当为删除语句时shardingValues为empty，返回所有数据源。
+  当为插入语句时shardingValues非空，返回user_id值对应的数据源。
+
