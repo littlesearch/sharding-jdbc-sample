@@ -8,6 +8,7 @@ import net.aimeizi.mapper.OrderMapper;
 import net.aimeizi.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -35,12 +36,35 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public void addOrders(List<Order> orders) {
+        //不同库对应不同key
+        Map<String, List<Order>> map = ListUtil.getMapByKeyProperty(orders, "userId");
+        for (String userId : map.keySet()) {
+            //不同表对应不同key
+            Map<String, List<Order>> map2 = ListUtil.getMapByModKeyProperty(map.get(userId), "orderId",
+                    singleKeyModuloTableShardingAlgorithm.getTableCount());
+            for (String key : map2.keySet()) {
+                orderMapper.insertBatch(map2.get(key));
+            }
+        }
+    }
+
+    /**
+     *
+     * @param orders
+     */
+    @Override
+    @Transactional(rollbackFor = RuntimeException.class)
+    public void addOrdersTrans(List<Order> orders) {
         Map<String, List<Order>> map = ListUtil.getMapByKeyProperty(orders, "userId");
         for (String userId : map.keySet()) {
             Map<String, List<Order>> map2 = ListUtil.getMapByModKeyProperty(map.get(userId), "orderId",
                     singleKeyModuloTableShardingAlgorithm.getTableCount());
             for (String key : map2.keySet()) {
                 orderMapper.insertBatch(map2.get(key));
+            }
+            //模拟异常回滚
+            if (!userId.equals("1")) {
+                throw new RuntimeException("模拟异常回滚");
             }
         }
     }

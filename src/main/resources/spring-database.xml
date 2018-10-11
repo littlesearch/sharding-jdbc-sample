@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
                         http://www.springframework.org/schema/beans/spring-beans.xsd 
 
 
                         http://www.springframework.org/schema/context 
-                        http://www.springframework.org/schema/context/spring-context.xsd">
+                        http://www.springframework.org/schema/context/spring-context.xsd
+                        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.0.xsd">
 
     <context:component-scan base-package="net.aimeizi"/>
 
@@ -113,6 +114,16 @@
         <constructor-arg ref="shardingRule"/>
     </bean>
 
+    <!-- 开启事务 -->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="shardingDataSource"/>
+    </bean>
+
+    <!-- 使用注解annotation定义事务：
+	如果 "proxy-target-class" 属值被设置为 "true"，那么基于类的代理将起作用（这时需要CGLIB库cglib.jar在CLASSPATH中）。
+	如果 "proxy-target-class" 属值被设置为 "false" 或者这个属性被省略，那么标准的JDK基于接口的代理将起作用。
+	-->
+    <tx:annotation-driven transaction-manager="transactionManager" proxy-target-class="false" />
 
     <!--mybatis配置-->
     <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">

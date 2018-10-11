@@ -1,3 +1,7 @@
+
+增加了事务示例  
+--tanliwei
+
 ### 当当[sharding-jdbc](https://github.com/dangdangdotcom/sharding-jdbc)的代码示例
 
 -------

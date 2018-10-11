@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+
 public class Application {
 
     public static void main(String[] args) {
@@ -20,10 +21,33 @@ public class Application {
         OrderService orderService = ctx.getBean(OrderService.class);
         int tableCount = ctx.getBean(SingleKeyModuloTableShardingAlgorithm.class).getTableCount();
 
+        transactionTest(orderService);
         basicTest(orderService);
         writeTest(orderService, tableCount);
 
         ctx.close();
+    }
+
+
+    private static void transactionTest(OrderService orderService) {
+
+        //deleteAll
+        orderService.deleteAll();
+
+        List<Order> orderList = new ArrayList<>();
+
+        //插入成功
+        orderList.add(buildOrder(2, 1, "NEW"));
+        orderService.addOrdersTrans(orderList);
+
+        //ADD 跨库
+        //模拟异常 回滚成功
+        orderList = new ArrayList<>();
+        orderList.add(buildOrder(1, 1, "NEW"));
+        orderList.add(buildOrder(1, 2, "NEW"));
+        orderService.addOrdersTrans(orderList);
+
+
     }
 
     private static void basicTest(OrderService orderService) {

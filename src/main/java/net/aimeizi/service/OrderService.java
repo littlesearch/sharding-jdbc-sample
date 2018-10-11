@@ -27,6 +27,12 @@ public interface OrderService {
      * @param orders
      */
     void addOrders(List<Order> orders);
+    /**
+     * 事务中批量添加订单
+     * 模拟异常回滚
+     * @param orders
+     */
+    void addOrdersTrans(List<Order> orders);
 
     /**
      * 批量批量用户的订单状态
